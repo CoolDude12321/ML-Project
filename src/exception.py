@@ -14,12 +14,13 @@
 ## Used to handle exceptions and system-specific parameters
 ## Manupulate Python runtime environment
 # -------------------------------------------
-# Logging Library
-## Used to log error messages for tracking exceptions
+# Logging Module
+## Used for logging error messages
+## Helps in tracking events that happen when some software runs
 # =============================================
 
 import sys
-import logging
+from src.logger import logging
 
 # =============================================
 # Function to Generate Detailed Error Messages
@@ -51,3 +52,5 @@ class CustomException(Exception):
 
     def __str__(self):
         return self.error_message   
+    
+  
