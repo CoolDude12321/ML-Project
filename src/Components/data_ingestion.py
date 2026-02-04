@@ -1,4 +1,22 @@
+# src/Components/data_ingestion.py
+# =================================================
+# This module handles data ingestion for the machine learning pipeline.
+# It reads the dataset, splits it into training and testing sets.
+# It also saves the raw, training, and testing data to specified file paths.
+# =================================================
 
+
+# =============================================
+# Importing the Necessary Libraries
+# ---------------------------------------------
+# OS Library for interacting with the operating system
+# SYS Library for system-specific parameters and functions
+# src.exception for custom exception handling
+# src.logger for logging information during execution
+# Pandas for data manipulation and analysis
+# Sklearn's train_test_split for splitting the dataset into training and testing sets
+# Dataclasses for creating data classes to manage configuration
+# =============================================
 import os
 import sys
 from src.exception import CustomException
@@ -9,14 +27,18 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 
 
-
-
+# =============================================
+# @Data Ingestion Configuration and Class
+# ---------------------------------------------
+# This section defines the configuration for data ingestion and the DataIngestion class.
+# The DataIngestion class contains methods to read the dataset, split it, and save the files.
+# =============================================
 @dataclass
 class DataIngestionConfig:
     train_data_path: str=os.path.join('artifacts',"train.csv")
     test_data_path: str=os.path.join('artifacts',"test.csv")
     raw_data_path: str=os.path.join('artifacts',"data.csv")
-
+    
 class DataIngestion:
     def __init__(self):
         self.ingestion_config=DataIngestionConfig()
