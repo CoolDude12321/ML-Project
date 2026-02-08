@@ -69,7 +69,7 @@ class ModelTrainer:
     def __init__(self):
         self.model_trainer_config=ModelTrainerConfig()
 
-
+    # X_train and y_train are the training data and labels, while X_test and y_test are the testing data and labels.
     def initiate_model_trainer(self,train_array,test_array):
         try:
             logging.info("Split training and test input data")
@@ -79,6 +79,8 @@ class ModelTrainer:
                 test_array[:,:-1],
                 test_array[:,-1]
             )
+
+            # models is a dictionary that contains the names of the regression models as keys and their corresponding instantiated objects as values.
             models = {
                 "Random Forest": RandomForestRegressor(),
                 "Decision Tree": DecisionTreeRegressor(),
@@ -88,17 +90,26 @@ class ModelTrainer:
                 "CatBoosting Regressor": CatBoostRegressor(verbose=False),
                 "AdaBoost Regressor": AdaBoostRegressor(),
             }
+
+            # params is a dictionary that contains the hyperparameters for each regression model.
             params={
+                # Decision Tree is used to select the best method to train the model 
+                # and to get the best hyperparameters for the model.
                 "Decision Tree": {
                     'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
-                    # 'splitter':['best','random'],
-                    # 'max_features':['sqrt','log2'],
                 },
+
+                # Random Forest trains many decision trees (using default squared_error)
+                # and averages their outputs to improve performance and control over-fitting.
+                # The n_estimators parameter specifies the number of trees in the forest.
                 "Random Forest":{
-                    # 'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
-                    # 'max_features':['sqrt','log2',None],
                     'n_estimators': [8,16,32,64,128,256]
                 },
+
+                # Gradient Boosting builds an additive model in a sequential manner, 
+                # optimizing for a loss function (default friedman_mse) and using decision trees as weak learners.
+                # The learning_rate parameter controls the error contribution of each tree,
+                # while subsample specifies the fraction of samples to be used for fitting the individual base learners.
                 "Gradient Boosting":{
                     # 'loss':['squared_error', 'huber', 'absolute_error', 'quantile'],
                     'learning_rate':[.1,.01,.05,.001],
@@ -107,7 +118,14 @@ class ModelTrainer:
                     # 'max_features':['auto','sqrt','log2'],
                     'n_estimators': [8,16,32,64,128,256]
                 },
+
+                # Linear Regression is a simple linear approach to modeling the relationship between a dependent variable and one or more independent variables.
+                # Creates an default model with no hyperparameters to tune, as it is a straightforward linear approach.
                 "Linear Regression":{},
+
+                # XGBRegressor(eXtreme Gradient Boosting) is an optimized gradient boosting library that does same thing as Gradient Boosting but is designed for speed and performance.
+                # We use both Gradient Boosting and XGBRegressor to compare their performance and select the best one for our dataset.
+                # Same as XGBRegressor, we also use CatBoosting Regressor and AdaBoost Regressor to compare their performance and select the best one for our dataset.
                 "XGBRegressor":{
                     'learning_rate':[.1,.01,.05,.001],
                     'n_estimators': [8,16,32,64,128,256]
@@ -123,14 +141,15 @@ class ModelTrainer:
                     'n_estimators': [8,16,32,64,128,256]
                 }
             }
-
+            
+            # model_report is a dictionary that contains the R2 scores of each regression model on the test dataset.
             model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,
                                              models=models,param=params)
             
-            ## To get best model score from dict
+            # To get best model score from dict
             best_model_score = max(sorted(model_report.values()))
 
-            ## To get best model name from dict
+            # To get best model name from dict
             best_model_name = list(model_report.keys())[
                 list(model_report.values()).index(best_model_score)
             ]
