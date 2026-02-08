@@ -143,6 +143,7 @@ class ModelTrainer:
             }
             
             # model_report is a dictionary that contains the R2 scores of each regression model on the test dataset.
+            # 'params = params' is passed to the evaluate_models function to perform hyperparameter tuning for each model using GridSearchCV or RandomizedSearchCV.
             model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,
                                              models=models,param=params)
             

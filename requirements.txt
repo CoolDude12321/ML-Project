@@ -5,3 +5,10 @@ seaborn
 matplotlib
 catboost
 xgboost
+dill
+Flask
+pickle
+requests
+os
+sys
+dataclasses
