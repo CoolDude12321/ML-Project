@@ -61,10 +61,6 @@ class ModelTrainerConfig:
 # This class contains methods to train and evaluate multiple regression models.
 # It selects the best-performing model based on R2 score and saves it to a specified file path.
 # =============================================
-@dataclass
-class ModelTrainerConfig:
-    trained_model_file_path=os.path.join("artifacts","model.pkl")
-
 class ModelTrainer:
     def __init__(self):
         self.model_trainer_config=ModelTrainerConfig()
@@ -155,10 +151,16 @@ class ModelTrainer:
                 list(model_report.values()).index(best_model_score)
             ]
             best_model = models[best_model_name]
+            best_model.fit(X_train,y_train)
 
             if best_model_score<0.6:
-                raise CustomException("No best model found")
+                raise CustomException("No best model found with R2 score >= 0.6",sys)
             logging.info(f"Best found model on both training and testing dataset")
+
+            os.makedirs(
+                os.path.dirname(self.model_trainer_config.trained_model_file_path),
+                exist_ok=True
+            )
 
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,

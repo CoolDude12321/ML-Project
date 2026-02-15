@@ -14,6 +14,7 @@
 # src.exception for custom exception handling
 # src.utils for utility functions like loading objects
 # =============================================
+import os
 import sys
 import pandas as pd
 from src.exception import CustomException
@@ -32,8 +33,10 @@ class PredictPipeline:
 
     def predict(self,features):
         try:
-            model_path = 'artifacts/model.pkl'
-            preprocessor_path = 'artifacts/preprocessor.pkl'
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            model_path = os.path.join(base_dir, "artifacts", "model.pkl")
+            preprocessor_path = os.path.join(base_dir, "artifacts", "preprocessor.pkl")
+
             model = load_object(file_path=model_path)
             preprocessor = load_object(file_path=preprocessor_path)
 

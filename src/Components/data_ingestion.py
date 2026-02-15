@@ -1,4 +1,4 @@
-# src/Components/data_ingestion.py
+# src/components/data_ingestion.py
 # =================================================
 # This module handles data ingestion for the machine learning pipeline.
 # It reads the dataset, splits it into training and testing sets.
@@ -50,8 +50,11 @@ class DataIngestion:
 
     def initiate_data_ingestion(self):
         logging.info("Entered the data ingestion method or component")
-        try:
-            df=pd.read_csv(r'D:\Project ML\Notebook\Dataset\Student.csv')
+        try:            
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            data_path = os.path.join(base_dir, "Notebook", "Dataset", "Student.csv")
+            df = pd.read_csv(data_path)
+
             logging.info('Read the dataset as dataframe')
 
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
@@ -72,13 +75,3 @@ class DataIngestion:
         
         except Exception as e:
             raise CustomException(e,sys)
-        
-if __name__=="__main__":
-    obj=DataIngestion()
-    train_data,test_data=obj.initiate_data_ingestion()
-
-    data_transformation=DataTransformation()
-    train_arr,test_arr,_=data_transformation.initiate_data_transformation(train_data,test_data)
-
-    modeltrainer=ModelTrainer()
-    print(modeltrainer.initiate_model_trainer(train_arr,test_arr))
